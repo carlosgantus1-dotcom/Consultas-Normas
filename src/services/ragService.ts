@@ -72,6 +72,10 @@ export class RAGService {
    */
   private async generateEmbedding(text: string): Promise<number[]> {
     try {
+      if (!this.apiKey) {
+        console.warn("RAGService: GEMINI_API_KEY não configurada.");
+        return [];
+      }
       const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/embedding-001:embedContent?key=${this.apiKey}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -80,7 +84,18 @@ export class RAGService {
           content: { parts: [{ text }] }
         })
       });
+      
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        console.error("Erro na API de Embedding:", res.status, errorData);
+        return [];
+      }
+
       const data = await res.json();
+      if (!data.embedding || !data.embedding.values) {
+        console.error("Resposta de embedding inválida:", data);
+        return [];
+      }
       return data.embedding.values;
     } catch (error) {
       console.error("Erro ao gerar embedding:", error);

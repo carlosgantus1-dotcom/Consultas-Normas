@@ -207,7 +207,12 @@ export default function App() {
     setIsLoading(true);
 
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! });
+      const apiKey = process.env.GEMINI_API_KEY;
+      if (!apiKey) {
+        throw new Error("GEMINI_API_KEY não configurada. Verifique as variáveis de ambiente no Render.");
+      }
+      
+      const ai = new GoogleGenAI({ apiKey });
       
       // --- RAG: Busca Semântica ---
       // Em vez de enviar TODOS os PDFs, buscamos apenas os trechos relevantes
@@ -285,12 +290,14 @@ export default function App() {
       setMessages(prev => [...prev, assistantMessage]);
       await saveMessage(assistantMessage);
       fetchUserHistory(); // Atualiza histórico após resposta
-    } catch (error) {
-      console.error("Gemini Error:", error);
+    } catch (error: any) {
+      console.error("Gemini Error Details:", error);
+      const errorMessage = error?.message || "Erro desconhecido";
+      
       setMessages(prev => [...prev, {
         id: Date.now().toString(),
         role: 'assistant',
-        content: "Ocorreu um erro ao processar sua pergunta. Verifique sua conexão e tente novamente."
+        content: `Ocorreu um erro ao processar sua pergunta: ${errorMessage}. Verifique sua conexão e se a chave de API está configurada corretamente no Render.`
       }]);
     } finally {
       setIsLoading(false);
@@ -801,7 +808,9 @@ export default function App() {
                           log.role === 'user' ? "bg-neutral-800 text-white" : "bg-gold/5 text-neutral-300 border border-gold/10"
                         )}>
                           <span className="text-[10px] font-bold uppercase opacity-50 block mb-1">{log.role === 'user' ? 'Pergunta' : 'Resposta IA'}</span>
-                          <Markdown>{log.content}</Markdown>
+                          <div className="markdown-body">
+                            <Markdown>{log.content}</Markdown>
+                          </div>
                         </div>
                       </div>
                     ))
