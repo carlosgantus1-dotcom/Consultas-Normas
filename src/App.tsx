@@ -261,7 +261,7 @@ export default function App() {
       }
 
       const response: GenerateContentResponse = await ai.models.generateContent({
-        model: "gemini-3-flash-preview",
+        model: "gemini-1.5-flash-latest",
         contents: { parts },
         config: {
           systemInstruction: `Você é um assistente jurídico especializado na Polícia Civil do Estado do Rio Grande do Sul (PCRS). 

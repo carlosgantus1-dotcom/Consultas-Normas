@@ -138,8 +138,8 @@ export class RAGService {
           embedding
         });
       }
-      // Pequena pausa para evitar 429 (Rate Limit)
-      await new Promise(resolve => setTimeout(resolve, 500));
+      // Pausa maior (2s) para evitar 429 (Rate Limit) na camada gratuita
+      await new Promise(resolve => setTimeout(resolve, 2000));
     }
 
     this.indexedIds.add(id);
