@@ -117,13 +117,13 @@ export default function App() {
   // Indexar documentos para o RAG
   useEffect(() => {
     const indexDocs = async () => {
-      if (sharedDocs.length === 0) return;
+      if (sharedDocs.length === 0 || isIndexing) return;
       
       setIsIndexing(true);
       try {
         for (const doc of sharedDocs) {
-          if (doc.type === 'pdf') {
-            // Buscar conteúdo completo se não estiver no cache
+          // Só indexa se ainda não foi indexado nesta sessão
+          if (doc.type === 'pdf' && !ragService.isIndexed(doc.id)) {
             let content = pdfCacheRef.current[doc.id]?.content;
             if (!content) {
               const res = await fetch(`/api/documents/${doc.id}`);

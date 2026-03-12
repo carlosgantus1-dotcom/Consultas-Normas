@@ -54,9 +54,9 @@ export class RAGService {
   }
 
   /**
-   * Splitter simples por caracteres
+   * Splitter simples por caracteres - Aumentado para economizar quota
    */
-  private splitText(text: string, chunkSize: number = 1000, overlap: number = 200): string[] {
+  private splitText(text: string, chunkSize: number = 3000, overlap: number = 400): string[] {
     const chunks: string[] = [];
     let start = 0;
     while (start < text.length) {
@@ -138,6 +138,8 @@ export class RAGService {
           embedding
         });
       }
+      // Pequena pausa para evitar 429 (Rate Limit)
+      await new Promise(resolve => setTimeout(resolve, 500));
     }
 
     this.indexedIds.add(id);
@@ -164,6 +166,10 @@ export class RAGService {
 
   hasDocuments(): boolean {
     return this.indexedIds.size > 0;
+  }
+
+  isIndexed(id: string): boolean {
+    return this.indexedIds.has(id);
   }
 }
 
