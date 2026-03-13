@@ -21,6 +21,14 @@ db.exec(`
     createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
   );
 
+  CREATE TABLE IF NOT EXISTS document_chunks (
+    id TEXT PRIMARY KEY,
+    documentId TEXT,
+    content TEXT,
+    embedding TEXT, -- Armazenado como JSON string
+    FOREIGN KEY(documentId) REFERENCES documents(id) ON DELETE CASCADE
+  );
+
   CREATE TABLE IF NOT EXISTS messages (
     id TEXT PRIMARY KEY,
     userName TEXT,
@@ -98,6 +106,40 @@ app.delete("/api/documents/:id", (req, res) => {
     res.json({ success: true });
   } catch (error) {
     res.status(500).json({ error: "Erro ao deletar documento" });
+  }
+});
+
+app.get("/api/documents/:id/chunks", (req, res) => {
+  try {
+    const chunks = db.prepare("SELECT * FROM document_chunks WHERE documentId = ?").all(req.params.id);
+    res.json(chunks.map(c => ({
+      ...c,
+      embedding: JSON.parse(c.embedding)
+    })));
+  } catch (error) {
+    res.status(500).json({ error: "Erro ao buscar chunks" });
+  }
+});
+
+app.post("/api/chunks", (req, res) => {
+  const { documentId, chunks } = req.body;
+  try {
+    const insert = db.prepare("INSERT INTO document_chunks (id, documentId, content, embedding) VALUES (?, ?, ?, ?)");
+    const transaction = db.transaction((chunkList) => {
+      for (const chunk of chunkList) {
+        insert.run(
+          Math.random().toString(36).substr(2, 9),
+          documentId,
+          chunk.content,
+          JSON.stringify(chunk.embedding)
+        );
+      }
+    });
+    transaction(chunks);
+    res.status(201).json({ success: true });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Erro ao salvar chunks" });
   }
 });
 

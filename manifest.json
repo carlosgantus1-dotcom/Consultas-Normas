@@ -1,0 +1,23 @@
+{
+  "name": "PCRS Consultor Normativo",
+  "short_name": "PCRS",
+  "description": "Consultor Normativo da Polícia Civil do Rio Grande do Sul",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#D4AF37",
+  "icons": [
+    {
+      "src": "https://www.pc.rs.gov.br/upload/recortes/202405/16085838_498256_GDO.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://www.pc.rs.gov.br/upload/recortes/202405/16085838_498256_GDO.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

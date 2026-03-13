@@ -1,0 +1,53 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --color-gold: #D4AF37;
+  --color-gold-light: #F9E2AF;
+}
+
+body {
+  @apply bg-black text-white antialiased;
+}
+
+.markdown-body {
+  @apply text-white;
+}
+
+.markdown-body h1, .markdown-body h2, .markdown-body h3 { @apply text-gold font-bold; }
+.markdown-body h1 { @apply text-2xl mb-4 mt-6; }
+.markdown-body h2 { @apply text-xl mb-3 mt-5; }
+.markdown-body h3 { @apply text-lg mb-2 mt-4; }
+.markdown-body p { @apply mb-4 leading-relaxed text-neutral-300; }
+.markdown-body ul { @apply list-disc pl-6 mb-4 text-neutral-300; }
+.markdown-body ol { @apply list-decimal pl-6 mb-4 text-neutral-300; }
+.markdown-body li { @apply mb-1; }
+.markdown-body blockquote { @apply border-l-4 border-gold pl-4 italic mb-4 text-neutral-400; }
+.markdown-body code { @apply bg-neutral-800 px-1 rounded font-mono text-sm text-gold-light; }
+.markdown-body pre { @apply bg-neutral-900 text-neutral-100 p-4 rounded-lg mb-4 overflow-x-auto border border-neutral-800; }
+.markdown-body pre code { @apply bg-transparent p-0 text-neutral-100; }
+
+/* Custom Scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  @apply bg-neutral-800 rounded-full hover:bg-neutral-700;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
